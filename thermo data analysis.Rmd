@@ -31,17 +31,28 @@ After importing these libraries, the team imported the data. The data is broken 
 ```{r}
 #| label: import-all-data
 #| message: FALSE
-baseline <- read_csv("thermo_baseline.csv", delimeter = ',')
-baseline
+baseline <- read_csv("thermo_baseline.csv", show_col_types = FALSE)
+baseline <- baseline |>
+  select(where(~ !all(is.na(.))))
 baseline
 ```
 
-## Including Plots
+## 
 
-You can also embed plots, for example:
+The team then cleaned out the dataset so it only reflected the moments where the compressor in the fridge was using power, rather than the total data collection time, as many values for work rate (power) are 0.
 
 ```{r}
-plot(pressure)
+#| label: filtering-no-w
+
+baseline_filt <- baseline |>
+  filter(`W` != 0)
+baseline_filt
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Next, the team made two plots: minutes after start vs. W (work) and minutes after start vs. volts. **Figure 1** is the first plot.
+
+```{r}
+#| label: plot-work
+ggplot(baseline_filt, aes(x = `Minutes after start`, y = W)) +
+  geom_line()
+```
