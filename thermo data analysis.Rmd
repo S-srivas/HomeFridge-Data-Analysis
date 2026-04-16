@@ -1,0 +1,47 @@
+---
+title: "Dorm Fridge Data Analysis"
+subtitle: "ME 331: Thermodynamics Spring 2026"
+output: html_document
+author: "Eva Bochner, Michelle Chen, Sierra Healy, Saina Srivastava"
+date: "2026-04-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This is the data analysis for the data acquired from the Arduino for Spring 2026's ME 331 group Home Fridge.
+
+## Baseline Data
+
+First, the team imports important libraries. This includes tidyverse, a rudimentary package for statistical analysis, and tidymodels, a beginner-friendly package for statistical modeling.
+
+```{r}
+#| label: import-all-libraries
+#| message: FALSE
+library(tidyverse)
+library(tidymodels)
+library(dplyr)
+```
+
+After importing these libraries, the team imported the data. The data is broken into two key chunks: the baseline data (*thermo_baseline.csv*) and the data collected over hours (*filename.csv).*
+
+```{r}
+#| label: import-all-data
+#| message: FALSE
+baseline <- read_csv("thermo_baseline.csv", delimeter = ',')
+baseline
+baseline
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
