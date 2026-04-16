@@ -34,10 +34,18 @@ After importing these libraries, the team imported the data. The data is broken 
 baseline <- read_csv("thermo_baseline.csv", show_col_types = FALSE)
 baseline <- baseline |>
   select(where(~ !all(is.na(.))))
-baseline
+trial1 <- read_csv("trial1.csv", col_types = cols_only(
+  `Minutes after start` = col_double(), 
+  `temp in fridge` = col_double(),
+  `temp in water` = col_double(),
+  `temp in air` = col_double()), 
+  show_col_types = FALSE, 
+  name_repair = "unique_quiet")
+
+trial1
 ```
 
-## 
+## Cleaning Process
 
 The team then cleaned out the dataset so it only reflected the moments where the compressor in the fridge was using power, rather than the total data collection time, as many values for work rate (power) are 0.
 
@@ -49,10 +57,35 @@ baseline_filt <- baseline |>
 baseline_filt
 ```
 
+## Plotting Baseline Data
+
 Next, the team made two plots: minutes after start vs. W (work) and minutes after start vs. volts. **Figure 1** is the first plot.
 
 ```{r}
 #| label: plot-work
 ggplot(baseline_filt, aes(x = `Minutes after start`, y = W)) +
-  geom_line()
+  geom_line() +
+  geom_point(color = "red") +
+  labs(title = "Minutes after Start vs. the Power from the Wall Unit Over 90 Minutes",
+       subtitle = "The power the compressor takes in in 5 minute bursts over time",
+       x_label = "Time (min)", 
+       y_lab = "Power (Watts)")
+```
+
+## Using Water Dish
+
+After a clear idea, the team placed a dish of water with the mass of *mass* to see the rate of heat transfer from water to the fridge. This variable will be called $$\dot{Q_w}$$
+
+.Plotting this:
+
+```{r}
+#| label: plot-work
+ggplot(trial1, aes(x = `Minutes after start`)) +
+  geom_line(aes(y = `temp in fridge`)) +
+  geom_line(aes(y = `temp in water`)) +
+  geom_line(aes(y = `temp in air`)) +
+  labs(title = "Minutes after Start vs. the Temperature",
+       subtitle = "Measuring the temperature in air, water, and the fridge over time",
+       x_label = "Time (min)", 
+       y_lab = "Temperature (Celsius)")
 ```

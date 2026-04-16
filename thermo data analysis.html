@@ -9,7 +9,7 @@
 <meta name="author" content="Eva Bochner, Michelle Chen, Sierra Healy, Saina Srivastava">
 <meta name="dcterms.date" content="2026-04-15">
 
-<title>thermo data analysis</title>
+<title>Dorm Fridge Data Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +81,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">thermo data analysis</h1>
+<h1 class="title">Dorm Fridge Data Analysis</h1>
+<p class="subtitle lead">ME 331: Thermodynamics Spring 2026</p>
 </div>
 
 
@@ -119,49 +120,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>First, the team imports important libraries. This includes tidyverse, a rudimentary package for statistical analysis, and tidymodels, a beginner-friendly package for statistical modeling.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>After importing these libraries, the team imported the data. The data is broken into two key chunks: the baseline data (<em>thermo_baseline.csv</em>) and the data collected over hours (<em>filename.csv).</em></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>baseline <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"thermo_baseline.csv"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>baseline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>baseline <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"thermo_baseline.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>baseline <span class="ot">&lt;-</span> baseline <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.))))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>baseline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 16 × 6
-   `Minutes after start` ...2  volts   kwh    hz     W
-                   &lt;dbl&gt; &lt;lgl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1                     0 NA     121.  0     59.9   0  
- 2                     5 NA     121.  0     60     0  
- 3                    10 NA     121.  0     59.9   0  
- 4                    15 NA     121   0     60     0  
- 5                    20 NA     121   0     60     0  
- 6                    25 NA     121.  0     60     0  
- 7                    30 NA     121.  0     60     0  
- 8                    35 NA     121.  0     59.9   0  
- 9                    40 NA     121.  0     60     0  
-10                    45 NA     121.  0     60    53.3
-11                    50 NA     121   0     59.9  51.2
-12                    55 NA     121.  0     59.9  46.7
-13                    60 NA     121.  0     60    46  
-14                    70 NA     121.  0.01  60    44.1
-15                    80 NA     121   0.02  60    43  
-16                    90 NA     122.  0.02  60     0  </code></pre>
+<pre><code># A tibble: 16 × 5
+   `Minutes after start` volts   kwh    hz     W
+                   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1                     0  121.  0     59.9   0  
+ 2                     5  121.  0     60     0  
+ 3                    10  121.  0     59.9   0  
+ 4                    15  121   0     60     0  
+ 5                    20  121   0     60     0  
+ 6                    25  121.  0     60     0  
+ 7                    30  121.  0     60     0  
+ 8                    35  121.  0     59.9   0  
+ 9                    40  121.  0     60     0  
+10                    45  121.  0     60    53.3
+11                    50  121   0     59.9  51.2
+12                    55  121.  0     59.9  46.7
+13                    60  121.  0     60    46  
+14                    70  121.  0.01  60    44.1
+15                    80  121   0.02  60    43  
+16                    90  122.  0.02  60     0  </code></pre>
 </div>
 </div>
 </section>
-<section id="including-plots" class="level2">
-<h2 class="anchored" data-anchor-id="including-plots">Including Plots</h2>
-<p>You can also embed plots, for example:</p>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section"></h2>
+<p>The team then cleaned out the dataset so it only reflected the moments where the compressor in the fridge was using power, rather than the total data collection time, as many values for work rate (power) are 0.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pressure)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>baseline_filt <span class="ot">&lt;-</span> baseline <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">W</span><span class="st">`</span> <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>baseline_filt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  `Minutes after start` volts   kwh    hz     W
+                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1                    45  121.  0     60    53.3
+2                    50  121   0     59.9  51.2
+3                    55  121.  0     59.9  46.7
+4                    60  121.  0     60    46  
+5                    70  121.  0.01  60    44.1
+6                    80  121   0.02  60    43  </code></pre>
+</div>
+</div>
+<p>Next, the team made two plots: minutes after start vs.&nbsp;W (work) and minutes after start vs.&nbsp;volts. <strong>Figure 1</strong> is the first plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(baseline_filt, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span>, <span class="at">y =</span> W)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="thermo-data-analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="thermo-data-analysis_files/figure-html/plot-work-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
 </section>
 
 </main>
