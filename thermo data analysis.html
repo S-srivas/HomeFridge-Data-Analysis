@@ -156,39 +156,41 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>baseline <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"thermo_baseline.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>baseline <span class="ot">&lt;-</span> baseline <span class="sc">|&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.))))</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>trial1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"trial1.csv"</span>, <span class="at">col_types =</span> <span class="fu">cols_only</span>(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(), </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>()), </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">name_repair =</span> <span class="st">"unique_quiet"</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>trial1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.)))) <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">time =</span> <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>trial1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"trial1.csv"</span>, <span class="at">col_types =</span> <span class="fu">cols_only</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(), </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>()), </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">name_repair =</span> <span class="st">"unique_quiet"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">time =</span> <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">tfrid =</span> <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">tw =</span> <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">ta =</span> <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>baseline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 19 × 4
-   `Minutes after start` `temp in fridge` `temp in water` `temp in air`
-                   &lt;dbl&gt;            &lt;dbl&gt;           &lt;dbl&gt;         &lt;dbl&gt;
- 1                     0            11.3             19.8          20  
- 2                     5             9.55            18.3          19.9
- 3                    10             9.6             17.3          19.8
- 4                    15             9.65            16.8          19.9
- 5                    20             9.45            15.7          20  
- 6                    25             8.96            15.3          19.9
- 7                    30             9.11            14.7          20  
- 8                    35             9.4             14.2          19.8
- 9                    40             9.11            13.7          20.1
-10                    45             9.26            13.3          19.8
-11                    50             9.11            13.0          19.8
-12                    55             8.96            12.3          20.0
-13                    60             8.67            11.9          20.0
-14                    65             9.01            11.5          20  
-15                    70             8.86            11.6          20.1
-16                    75             8.82            11.4          19.6
-17                    80             8.77            10.9          19.7
-18                    85             8.62            10.8          20.0
-19                    90             8.62            10.5          NA  </code></pre>
+<pre><code># A tibble: 16 × 5
+    time volts   kwh    hz     W
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1     0  121.  0     59.9   0  
+ 2     5  121.  0     60     0  
+ 3    10  121.  0     59.9   0  
+ 4    15  121   0     60     0  
+ 5    20  121   0     60     0  
+ 6    25  121.  0     60     0  
+ 7    30  121.  0     60     0  
+ 8    35  121.  0     59.9   0  
+ 9    40  121.  0     60     0  
+10    45  121.  0     60    53.3
+11    50  121   0     59.9  51.2
+12    55  121.  0     59.9  46.7
+13    60  121.  0     60    46  
+14    70  121.  0.01  60    44.1
+15    80  121   0.02  60    43  
+16    90  122.  0.02  60     0  </code></pre>
 </div>
 </div>
 </section>
@@ -201,14 +203,14 @@ window.Quarto = {
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>baseline_filt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 5
-  `Minutes after start` volts   kwh    hz     W
-                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1                    45  121.  0     60    53.3
-2                    50  121   0     59.9  51.2
-3                    55  121.  0     59.9  46.7
-4                    60  121.  0     60    46  
-5                    70  121.  0.01  60    44.1
-6                    80  121   0.02  60    43  </code></pre>
+   time volts   kwh    hz     W
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1    45  121.  0     60    53.3
+2    50  121   0     59.9  51.2
+3    55  121.  0     59.9  46.7
+4    60  121.  0     60    46  
+5    70  121.  0.01  60    44.1
+6    80  121   0.02  60    43  </code></pre>
 </div>
 </div>
 </section>
@@ -216,7 +218,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="plotting-baseline-data">Plotting Baseline Data</h2>
 <p>Next, the team made two plots: minutes after start vs.&nbsp;W (work) and minutes after start vs.&nbsp;volts. <strong>Figure 1</strong> is the first plot.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(baseline_filt, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span>, <span class="at">y =</span> W)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(baseline_filt, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> W)) <span class="sc">+</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Power from the Wall Unit Over 90 Minutes"</span>,</span>
@@ -237,22 +239,75 @@ window.Quarto = {
 <p>After a clear idea, the team placed a dish of water with the mass of <em>mass</em> to see the rate of heat transfer from water to the fridge. This variable will be called <span class="math display">\[\dot{Q_w}\]</span></p>
 <p>.Plotting this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trial1, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span>)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span>)) <span class="sc">+</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span>)) <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trial1, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">time</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="st">`</span><span class="at">tfrid</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="st">`</span><span class="at">tw</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="st">`</span><span class="at">ta</span><span class="st">`</span>)) <span class="sc">+</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Temperature"</span>,</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Measuring the temperature in air, water, and the fridge over time"</span>,</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x_label =</span> <span class="st">"Time (min)"</span>, </span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y_lab =</span> <span class="st">"Temperature (Celsius)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
-(`geom_line()`).</code></pre>
-</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="thermo-data-analysis_files/figure-html/plot-temp-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Then, using the equation for heat transfer:</p>
+<p><span class="math display">\[
+\dot{Q} = \dot{m}c_v\Delta{T}
+\]</span></p>
+<p>By assuming that the heat transfer from the water is the same as the heat transferred into the refrigerator air, we can just observe the change in temperature of the water and then extrapolate those values for the fridge. The mass of the water is determined from the volume of the container, 250mL, and the density of water, which is 1 kg/m<sup>3</sup>.</p>
+<p>So it would be:</p>
+<p><span class="math display">\[
+m = V \times\rho_w
+\]</span></p>
+<p>Which in this case yields <span class="math display">\[m\]</span> = 0.00025 kg or 0.25 grams. We use this to find the heat lost from the water due to refrigeration, which will then be divided by the time taken, to find the heat removal rate. Below is the heat removal rate and the heat removed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>q_water <span class="ot">&lt;-</span> trial1 <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_w =</span> <span class="fl">0.00025</span> <span class="sc">*</span> (tw<span class="sc">-</span> <span class="fu">lag</span>(tw)) <span class="sc">*</span> <span class="dv">4184</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_dot_w =</span> q_w<span class="sc">/</span>time)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>q_water</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 19 × 6
+    time tfrid    tw    ta    q_w  q_dot_w
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+ 1     0 11.3   19.8  20   NA     NA      
+ 2     5  9.55  18.3  19.9 -1.50  -0.299  
+ 3    10  9.6   17.3  19.8 -1.07  -0.107  
+ 4    15  9.65  16.8  19.9 -0.565 -0.0377 
+ 5    20  9.45  15.7  20   -1.08  -0.0539 
+ 6    25  8.96  15.3  19.9 -0.408 -0.0163 
+ 7    30  9.11  14.7  20   -0.659 -0.0220 
+ 8    35  9.4   14.2  19.8 -0.513 -0.0146 
+ 9    40  9.11  13.7  20.1 -0.513 -0.0128 
+10    45  9.26  13.3  19.8 -0.460 -0.0102 
+11    50  9.11  13.0  19.8 -0.251 -0.00502
+12    55  8.96  12.3  20.0 -0.774 -0.0141 
+13    60  8.67  11.9  20.0 -0.408 -0.00680
+14    65  9.01  11.5  20   -0.460 -0.00708
+15    70  8.86  11.6  20.1  0.105  0.00149
+16    75  8.82  11.4  19.6 -0.157 -0.00209
+17    80  8.77  10.9  19.7 -0.554 -0.00693
+18    85  8.62  10.8  20.0 -0.157 -0.00185
+19    90  8.62  10.5  NA   -0.262 -0.00291</code></pre>
+</div>
+</div>
+<p>When this is graphed out:<br>
+</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(q_water, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_dot_w)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Heat Removal rate of Water"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Measuring the heat removal rate of the water over time"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x_label =</span> <span class="st">"Time (min)"</span>, </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y_lab =</span> <span class="st">" Q dot (J/kg)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="thermo-data-analysis_files/figure-html/graphed-q-dot-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

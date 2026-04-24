@@ -37,6 +37,31 @@ baseline <- baseline |>
   rename(time = `Minutes after start`)
 trial1 <- read_csv("trial1.csv", col_types = cols_only(
   `Minutes after start` = col_double(), 
+  W = col_double(),
+  `temp in fridge` = col_double(),
+  `temp in water` = col_double(),
+  `temp in air` = col_double()), 
+  show_col_types = FALSE, 
+  name_repair = "unique_quiet") |>
+  rename(time = `Minutes after start`,
+         tfrid = `temp in fridge`,
+         tw = `temp in water`,
+         ta = `temp in air`)
+trial2 <- read_csv("trial2.csv", col_types = cols_only(
+  `Minutes after start` = col_double(), 
+  W = col_double(),
+  `temp in fridge` = col_double(),
+  `temp in water` = col_double(),
+  `temp in air` = col_double()), 
+  show_col_types = FALSE, 
+  name_repair = "unique_quiet") |>
+  rename(time = `Minutes after start`,
+         tfrid = `temp in fridge`,
+         tw = `temp in water`,
+         ta = `temp in air`)
+trial3 <- read_csv("trial3.csv", col_types = cols_only(
+  `Minutes after start` = col_double(), 
+  W = col_double(),
   `temp in fridge` = col_double(),
   `temp in water` = col_double(),
   `temp in air` = col_double()), 
@@ -91,9 +116,8 @@ ggplot(trial1, aes(x = `time`)) +
   geom_line(aes(y = `tw`)) +
   geom_line(aes(y = `ta`)) +
   labs(title = "Minutes after Start vs. the Temperature",
-       subtitle = "Measuring the temperature in air, water, and the fridge over time",
-       x_label = "Time (min)", 
-       y_lab = "Temperature (Celsius)")
+       x = "Time (min)", 
+       y = "Temperature (Celsius)")
 ```
 
 Then, using the equation for heat transfer:
@@ -110,14 +134,22 @@ $$
 m = V \times\rho_w
 $$
 
-Which in this case yields $$m$$ = 0.00025 kg or 0.25 grams. We use this to find the heat lost from the water due to refrigeration, which will then be divided by the time taken, to find the heat removal rate. Below is the heat removal rate and the heat removed.
+Which in this case yields
+
+$$m$$ = 0.00025 kg or 0.25 grams. We use this to find the heat lost from the water due to refrigeration, which will then be divided by the time taken, to find the heat removal rate. Below is the heat removal rate and the heat removed.
 
 ```{r}
 #| label: find-q-dot
-q_water <- trial1 |>
+q_water_1 <- trial1 |>
   mutate(q_w = 0.00025 * (tw- lag(tw)) * 4184) |>
   mutate(q_dot_w = q_w/time)
-q_water
+q_water_2 <- trial2 |>
+  mutate(q_w = 0.00025 * (tw- lag(tw)) * 4184) |>
+  mutate(q_dot_w = q_w/time)
+q_water_3 <- trial3 |>
+  mutate(q_w = 0.00025 * (tw- lag(tw)) * 4184) |>
+  mutate(q_dot_w = q_w/time)
+q_water_1
 ```
 
 When this is graphed out:\
@@ -128,7 +160,34 @@ When this is graphed out:\
 ggplot(q_water, aes(x = time, y = q_dot_w)) +
   geom_line() +
   labs(title = "Minutes after Start vs. the Heat Removal rate of Water",
-       subtitle = "Measuring the heat removal rate of the water over time",
-       x_label = "Time (min)", 
-       y_lab = " Q dot (J/kg)")
+       x = "Time (min)", 
+       y = "Heat Removal Rate (J/kg)")
+```
+
+Doing something similar for the fridge temperature, we find the $$\dot{Q}$$ into the air using the specific heat value of dry air, assuming that there is only dry air in the fridge. We use the same formula as above, and the same mass flow rate, due to conservation of mass and mass flow rate.
+
+```{r}
+#| label: finding-fridge-q-dot
+q_dot_frid1 <- trial1 |>
+  mutate(q_f = 0.00025 * (tfrid - lag(tfrid)) * 1005) |>
+  mutate(q_dot_f = q_f/time)
+q_dot_frid2 <- trial2 |>
+  mutate(q_f = 0.00025 * (tfrid - lag(tfrid)) * 1005) |>
+  mutate(q_dot_f = q_f/time)
+q_dot_frid3 <- trial3 |>
+  mutate(q_f = 0.00025 * (tfrid - lag(tfrid)) * 1005) |>
+  mutate(q_dot_f = q_f/time)
+q_dot_frid1
+```
+
+Plotted this out:
+
+```{r}
+#| label: graphed-frid-q-dot
+#| warning: false
+ggplot(q_dot_frid, aes(x = time, y = q_dot_f)) +
+  geom_line() +
+  labs(title = "Minutes after Start vs. the Heat Removal rate of Water",
+       x = "Time (min)", 
+       y = "Heat Removal Rate (J/kg)")
 ```
