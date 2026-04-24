@@ -124,7 +124,6 @@ When this is graphed out:\
 
 ```{r}
 #| label: graphed-q-dot
-#| label: plot-temp
 #| warning: false
 ggplot(q_water, aes(x = time, y = q_dot_w)) +
   geom_line() +
