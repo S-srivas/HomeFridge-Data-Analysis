@@ -33,16 +33,21 @@ After importing these libraries, the team imported the data. The data is broken 
 #| message: FALSE
 baseline <- read_csv("thermo_baseline.csv", show_col_types = FALSE)
 baseline <- baseline |>
-  select(where(~ !all(is.na(.))))
+  select(where(~ !all(is.na(.)))) |>
+  rename(time = `Minutes after start`)
 trial1 <- read_csv("trial1.csv", col_types = cols_only(
   `Minutes after start` = col_double(), 
   `temp in fridge` = col_double(),
   `temp in water` = col_double(),
   `temp in air` = col_double()), 
   show_col_types = FALSE, 
-  name_repair = "unique_quiet")
+  name_repair = "unique_quiet") |>
+  rename(time = `Minutes after start`,
+         tfrid = `temp in fridge`,
+         tw = `temp in water`,
+         ta = `temp in air`)
 
-trial1
+baseline
 ```
 
 ## Cleaning Process
@@ -63,7 +68,7 @@ Next, the team made two plots: minutes after start vs. W (work) and minutes afte
 
 ```{r}
 #| label: plot-work
-ggplot(baseline_filt, aes(x = `Minutes after start`, y = W)) +
+ggplot(baseline_filt, aes(x = time, y = W)) +
   geom_line() +
   geom_point(color = "red") +
   labs(title = "Minutes after Start vs. the Power from the Wall Unit Over 90 Minutes",
@@ -79,13 +84,52 @@ After a clear idea, the team placed a dish of water with the mass of *mass* to s
 .Plotting this:
 
 ```{r}
-#| label: plot-work
-ggplot(trial1, aes(x = `Minutes after start`)) +
-  geom_line(aes(y = `temp in fridge`)) +
-  geom_line(aes(y = `temp in water`)) +
-  geom_line(aes(y = `temp in air`)) +
+#| label: plot-temp
+#| warning: false
+ggplot(trial1, aes(x = `time`)) +
+  geom_line(aes(y = `tfrid`)) +
+  geom_line(aes(y = `tw`)) +
+  geom_line(aes(y = `ta`)) +
   labs(title = "Minutes after Start vs. the Temperature",
        subtitle = "Measuring the temperature in air, water, and the fridge over time",
        x_label = "Time (min)", 
        y_lab = "Temperature (Celsius)")
+```
+
+Then, using the equation for heat transfer:
+
+$$
+\dot{Q} = \dot{m}c_v\Delta{T}
+$$
+
+By assuming that the heat transfer from the water is the same as the heat transferred into the refrigerator air, we can just observe the change in temperature of the water and then extrapolate those values for the fridge. The mass of the water is determined from the volume of the container, 250mL, and the density of water, which is 1 kg/m^3^.
+
+So it would be:
+
+$$
+m = V \times\rho_w
+$$
+
+Which in this case yields $$m$$ = 0.00025 kg or 0.25 grams. We use this to find the heat lost from the water due to refrigeration, which will then be divided by the time taken, to find the heat removal rate. Below is the heat removal rate and the heat removed.
+
+```{r}
+#| label: find-q-dot
+q_water <- trial1 |>
+  mutate(q_w = 0.00025 * (tw- lag(tw)) * 4184) |>
+  mutate(q_dot_w = q_w/time)
+q_water
+```
+
+When this is graphed out:\
+
+```{r}
+#| label: graphed-q-dot
+#| label: plot-temp
+#| warning: false
+ggplot(q_water, aes(x = time, y = q_dot_w)) +
+  geom_line() +
+  labs(title = "Minutes after Start vs. the Heat Removal rate of Water",
+       subtitle = "Measuring the heat removal rate of the water over time",
+       x_label = "Time (min)", 
+       y_lab = " Q dot (J/kg)")
 ```
