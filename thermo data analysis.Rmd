@@ -146,13 +146,13 @@ $$m$$ = 0.25 kg. We use this to find the heat lost from the water due to refrige
 #| label: find-q-dot
 q_water_1 <- trial1 |>
   mutate(q_w = 0.25 * (tw- lag(tw)) * 4184) |>
-  mutate(q_w_dot = q_w/time)
+  mutate(q_w_dot = q_w/(time*60))
 q_water_2 <- trial2 |>
   mutate(q_w = 0.25 * (tw- lag(tw)) * 4184) |>
-  mutate(q_w_dot = q_w/time)
+  mutate(q_w_dot = q_w/(time*60))
 q_water_3 <- trial3 |>
   mutate(q_w = 0.25 * (tw- lag(tw)) * 4184)|>
-  mutate(q_w_dot = q_w/time)
+  mutate(q_w_dot = q_w/(time*60))
 q_water_1
 ```
 
@@ -177,13 +177,13 @@ We do the same for the air inside the fridge. To find the $$\dot{Q_a}$$ , we use
 #| label: finding-fridge-q-dot
 q_frid1 <- trial1 |>
   mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1005) |>
-  mutate(q_f_dot = q_f/time)
+  mutate(q_f_dot = q_f/(time*60))
 q_frid2 <- trial2 |>
   mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1005) |>
-  mutate(q_f_dot = q_f/time)
+  mutate(q_f_dot = q_f/(time*60))
 q_frid3 <- trial3 |>
   mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1005) |>
-  mutate(q_f_dot = q_f/time)
+  mutate(q_f_dot = q_f/(time*60))
 ```
 
 Plotted this out:
@@ -206,13 +206,13 @@ The total work is found through integrating the work rate (power) by time.
 ```{r}
 #| label: find-work
 w1 <- trial1 |>
-  mutate(w = w_dot * (time - lag(time))) |>
+  mutate(w = w_dot * (time - lag(time)) * 60) |>
   select(time, w)
 w2 <- trial2 |>
-  mutate(w = w_dot * (time - lag(time))) |>
+  mutate(w = w_dot * (time - lag(time)) * 60) |>
   select (time, w)
 w3 <- trial3 |>
-  mutate(w = w_dot * (time - lag(time))) |>
+  mutate(w = w_dot * (time - lag(time)) * 60) |>
   select (time, w)
 w1
 ```
@@ -253,10 +253,10 @@ where $${m}$$ is 0 due to mass conservation, in an ideal scenario, the $$Q$$ equ
 total_q <- all |>
   group_by(trial) |>
   summarise(
-    q_f_total = sum(q_f, na.rm = TRUE),
-    q_w_total = sum(q_w, na.rm = TRUE),
-    qt = sum(q_f, na.rm = TRUE) + sum(q_w, na.rm = TRUE),
-    wt = sum(w, na.rm = TRUE)) 
+    q_f_total = sum(abs(q_f), na.rm = TRUE),
+    q_w_total = sum(abs(q_w), na.rm = TRUE),
+    qt = sum(abs(q_f), na.rm = TRUE) + sum(abs(q_w), na.rm = TRUE),
+    wt = sum(abs(w), na.rm = TRUE)) 
 total_q
 ```
 
@@ -266,6 +266,6 @@ After finding $$Q_t$$, we find the coefficient of performance (COP).
 #| label: cop
 #| warning: FALSE
 cop <- total_q |>
-  summarise(cop = qt/wt)
+  summarise(cop = wt/qt)
 cop
 ```
