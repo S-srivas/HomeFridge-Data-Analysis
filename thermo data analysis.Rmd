@@ -31,13 +31,14 @@ After importing these libraries, the team imported the data. The data is broken 
 ```{r}
 #| label: import-all-data
 #| message: FALSE
+#| warning: FALSE
 baseline <- read_csv("thermo_baseline.csv", show_col_types = FALSE)
 baseline <- baseline |>
   select(where(~ !all(is.na(.)))) |>
   rename(time = `Minutes after start`)
 trial1 <- read_csv("trial1.csv", col_types = cols_only(
   `Minutes after start` = col_double(), 
-  W = col_double(),
+  `W` = col_double(),
   `temp in fridge` = col_double(),
   `temp in water` = col_double(),
   `temp in air` = col_double()), 
@@ -46,7 +47,8 @@ trial1 <- read_csv("trial1.csv", col_types = cols_only(
   rename(time = `Minutes after start`,
          tfrid = `temp in fridge`,
          tw = `temp in water`,
-         ta = `temp in air`)
+         ta = `temp in air`,
+         w_dot = `W`)
 trial2 <- read_csv("trial2.csv", col_types = cols_only(
   `Minutes after start` = col_double(), 
   W = col_double(),
@@ -58,7 +60,8 @@ trial2 <- read_csv("trial2.csv", col_types = cols_only(
   rename(time = `Minutes after start`,
          tfrid = `temp in fridge`,
          tw = `temp in water`,
-         ta = `temp in air`)
+         ta = `temp in air`,
+         w_dot = W)
 trial3 <- read_csv("trial3.csv", col_types = cols_only(
   `Minutes after start` = col_double(), 
   W = col_double(),
@@ -70,9 +73,10 @@ trial3 <- read_csv("trial3.csv", col_types = cols_only(
   rename(time = `Minutes after start`,
          tfrid = `temp in fridge`,
          tw = `temp in water`,
-         ta = `temp in air`)
+         ta = `temp in air`,
+         w_dot = W)
 
-baseline
+trial1
 ```
 
 ## Cleaning Process
@@ -104,7 +108,7 @@ ggplot(baseline_filt, aes(x = time, y = W)) +
 
 ## Using Water Dish
 
-After a clear idea, the team placed a dish of water with the mass of *mass* to see the rate of heat transfer from water to the fridge. This variable will be called $$\dot{Q_w}$$
+After a clear idea, the team placed a dish of water with the mass of 0.00025kg to see the rate of heat transfer from water to the fridge. This variable will be called $$\dot{Q_w}$$
 
 .Plotting this:
 
@@ -136,19 +140,19 @@ $$
 
 Which in this case yields
 
-$$m$$ = 0.00025 kg or 0.25 grams. We use this to find the heat lost from the water due to refrigeration, which will then be divided by the time taken, to find the heat removal rate. Below is the heat removal rate and the heat removed.
+$$m$$ = 0.25 kg. We use this to find the heat lost from the water due to refrigeration, which will then be divided by the time taken, to find the heat removal rate. Below is the heat removal rate and the heat removed.
 
 ```{r}
 #| label: find-q-dot
 q_water_1 <- trial1 |>
-  mutate(q_w = 0.00025 * (tw- lag(tw)) * 4184) |>
-  mutate(q_dot_w = q_w/time)
+  mutate(q_w = 0.25 * (tw- lag(tw)) * 4184) |>
+  mutate(q_w_dot = q_w/time)
 q_water_2 <- trial2 |>
-  mutate(q_w = 0.00025 * (tw- lag(tw)) * 4184) |>
-  mutate(q_dot_w = q_w/time)
+  mutate(q_w = 0.25 * (tw- lag(tw)) * 4184) |>
+  mutate(q_w_dot = q_w/time)
 q_water_3 <- trial3 |>
-  mutate(q_w = 0.00025 * (tw- lag(tw)) * 4184) |>
-  mutate(q_dot_w = q_w/time)
+  mutate(q_w = 0.25 * (tw- lag(tw)) * 4184)|>
+  mutate(q_w_dot = q_w/time)
 q_water_1
 ```
 
@@ -157,27 +161,29 @@ When this is graphed out:\
 ```{r}
 #| label: graphed-q-dot
 #| warning: false
-ggplot(q_water, aes(x = time, y = q_dot_w)) +
-  geom_line() +
-  labs(title = "Minutes after Start vs. the Heat Removal rate of Water",
+ggplot() +
+  geom_line(data = q_water_1, aes(x = time, y = q_w, color = "Trial 1")) +
+  geom_line(data = q_water_2, aes(x = time, y = q_w, color = "Trial 2")) +
+  geom_line(data = q_water_3, aes(x = time, y = q_w, color = "Trial 3")) +
+  labs(title = "Minutes after Start vs. the Heat Removed From Water",
        x = "Time (min)", 
-       y = "Heat Removal Rate (J/kg)")
+       y = "Heat Removal (J)") +
+  theme_minimal()
 ```
 
-Doing something similar for the fridge temperature, we find the $$\dot{Q}$$ into the air using the specific heat value of dry air, assuming that there is only dry air in the fridge. We use the same formula as above, and the same mass flow rate, due to conservation of mass and mass flow rate.
+We do the same for the air inside the fridge. To find the $$\dot{Q_a}$$ , we use the specific heat value of dry air, 1005 J/kg, assuming that there is only dry air in the fridge. We use the same formula as above to determine $$\dot{Q}$$. To determine the mass of the air, we used the same thing as above: the volume of the fridge multiplies by the density of dry air, which ended up being 2.2 feet^3^, which is 0.062 m^3^. With the dry air density being 1.293 kg/m^3^ at standard state, the mass becomes 0.0801 kg.
 
 ```{r}
 #| label: finding-fridge-q-dot
-q_dot_frid1 <- trial1 |>
-  mutate(q_f = 0.00025 * (tfrid - lag(tfrid)) * 1005) |>
-  mutate(q_dot_f = q_f/time)
-q_dot_frid2 <- trial2 |>
-  mutate(q_f = 0.00025 * (tfrid - lag(tfrid)) * 1005) |>
-  mutate(q_dot_f = q_f/time)
-q_dot_frid3 <- trial3 |>
-  mutate(q_f = 0.00025 * (tfrid - lag(tfrid)) * 1005) |>
-  mutate(q_dot_f = q_f/time)
-q_dot_frid1
+q_frid1 <- trial1 |>
+  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1005) |>
+  mutate(q_f_dot = q_f/time)
+q_frid2 <- trial2 |>
+  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1005) |>
+  mutate(q_f_dot = q_f/time)
+q_frid3 <- trial3 |>
+  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1005) |>
+  mutate(q_f_dot = q_f/time)
 ```
 
 Plotted this out:
@@ -185,9 +191,81 @@ Plotted this out:
 ```{r}
 #| label: graphed-frid-q-dot
 #| warning: false
-ggplot(q_dot_frid, aes(x = time, y = q_dot_f)) +
-  geom_line() +
-  labs(title = "Minutes after Start vs. the Heat Removal rate of Water",
+ggplot() +
+  geom_line(data = q_frid1, aes(x = time, y = q_f, color = "Trial 1")) +
+  geom_line(data = q_frid2, aes(x = time, y = q_f, color = "Trial 2")) +
+  geom_line(data = q_frid3, aes(x = time, y = q_f, color = "Trial 3")) +
+  labs(title = "Minutes after Start vs. the Heat Removed from Air",
        x = "Time (min)", 
-       y = "Heat Removal Rate (J/kg)")
+       y = "Heat Removed (J)") +
+  theme_minimal()
+```
+
+The total work is found through integrating the work rate (power) by time.
+
+```{r}
+#| label: find-work
+w1 <- trial1 |>
+  mutate(w = w_dot * (time - lag(time))) |>
+  select(time, w)
+w2 <- trial2 |>
+  mutate(w = w_dot * (time - lag(time))) |>
+  select (time, w)
+w3 <- trial3 |>
+  mutate(w = w_dot * (time - lag(time))) |>
+  select (time, w)
+w1
+```
+
+Putting all the data together:
+
+```{r}
+#| label: add-q-together
+combined_q_1 <- q_water_1 |>
+  full_join(q_frid1, by="time") |>
+  full_join(w1, by="time") |>
+  mutate(trial = "Trial 1") |>
+  select(time, w, q_f, q_w, q_f_dot, q_w_dot, trial)
+combined_q_2 <- q_water_2 |>
+  full_join(q_frid2, by="time") |>
+  full_join(w2, by="time") |>
+  mutate(trial = "Trial 2") |>
+  select(time, w, q_f, q_w, q_f_dot, q_w_dot, trial)
+combined_q_3 <- q_water_3 |>
+  full_join(q_frid3, by="time") |>
+  full_join(w3, by="time") |>
+  mutate(trial = "Trial 3") |>
+  select(time, w, q_f, q_w, q_f_dot, q_w_dot, trial)
+
+all <- bind_rows(combined_q_1, combined_q_2, combined_q_3)
+```
+
+Using the first law of thermodynamics:
+
+$$
+Q - W~=~m\times\Delta{h}
+$$
+
+where $${m}$$ is 0 due to mass conservation, in an ideal scenario, the $$Q$$ equals the $$W$$. Thus, we combine $${Q_w}$$ with $$Q_a$$ to find $$Q_t$$, which is the total heat removed from the system due to the fridge. We do the same for the work to determine the total work and total heat per trial
+
+```{r}
+#| label: total-q-per-trial
+total_q <- all |>
+  group_by(trial) |>
+  summarise(
+    q_f_total = sum(q_f, na.rm = TRUE),
+    q_w_total = sum(q_w, na.rm = TRUE),
+    qt = sum(q_f, na.rm = TRUE) + sum(q_w, na.rm = TRUE),
+    wt = sum(w, na.rm = TRUE)) 
+total_q
+```
+
+After finding $$Q_t$$, we find the coefficient of performance (COP).
+
+```{r}
+#| label: cop
+#| warning: FALSE
+cop <- total_q |>
+  summarise(cop = wt/qt)
+cop
 ```
