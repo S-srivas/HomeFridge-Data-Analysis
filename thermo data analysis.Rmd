@@ -266,6 +266,6 @@ After finding $$Q_t$$, we find the coefficient of performance (COP).
 #| label: cop
 #| warning: FALSE
 cop <- total_q |>
-  summarise(cop = wt/qt)
+  summarise(cop = qt/wt)
 cop
 ```
