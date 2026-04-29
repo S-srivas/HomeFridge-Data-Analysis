@@ -145,29 +145,19 @@ $$m$$ = 0.25 kg. We use this to find the heat lost from the water due to refrige
 
 q_water_1 <- trial1 |>
   mutate(
-    dT_dt = (tw - lag(tw)) / ((time - lag(time)) * 60), # Degrees per second
-    q_w = abs(0.25 * 4.184 * dT_dt)  
+    q_w = abs(0.25 * 4.184 * (tw - lag(tw))),
+    q_w_dot = q_w/((time - lag(time)) * 60)
     )
 q_water_2 <- trial2 |>
   mutate(
-    dT_dt = (tw - lag(tw)) / ((time - lag(time)) * 60), # Degrees per second
-    q_w = abs(0.25 * 4.184 * dT_dt)                     
+    q_w = abs(0.25 * 4.184 * (tw - lag(tw))),
+    q_w_dot = q_w/((time - lag(time)) * 60)                 
   )
 q_water_3 <- trial3 |>
   mutate(
-    dT_dt = (tw - lag(tw)) / ((time - lag(time)) * 60), # Degrees per second
-    q_w = abs(0.25 * 4.184 * dT_dt)                   
+    q_w = abs(0.25 * 4.184 * (tw - lag(tw))),
+    q_w_dot = q_w/((time - lag(time)) * 60)                 
   )
-#q_water_1 <- trial1 |>
- # mutate(q_w = 0.25 * (tw- lag(tw)) * 4.184) |>
-  #mutate(q_w_dot = q_w/(time * 60))
-#q_water_2 <- trial2 |>
-#  mutate(q_w = 0.25 * (tw- lag(tw)) * 4.184) |>
-#  mutate(q_w_dot = q_w/(time * 60))
-#q_water_3 <- trial3 |>
-#  mutate(q_w = 0.25 * (tw- lag(tw)) * 4.184)|>
-#  mutate(q_w_dot = q_w/(time * 60))
-q_water_1
 ```
 
 When this is graphed out:\
@@ -184,44 +174,30 @@ ggplot() +
        y = "Heat Removal (kJ)") +
   theme_minimal()
 
-#ggplot() +
-#  geom_line(data = q_water_1, aes(x = time, y = q_w_dot, color = "Trial 1")) +
-#  geom_line(data = q_water_2, aes(x = time, y = q_w_dot, color = "Trial 2")) +
-#  geom_line(data = q_water_3, aes(x = time, y = q_w_dot, color = "Trial 3")) +
-#  labs(title = "Minutes after Start vs. the Heat Removal Rate of Water",
-#       x = "Time (min)", 
-#       y = "Heat Removal (kJ)") +
-#  theme_minimal()
+ggplot() +
+  geom_line(data = q_water_1, aes(x = time, y = q_w_dot, color = "Trial 1")) +
+  geom_line(data = q_water_2, aes(x = time, y = q_w_dot, color = "Trial 2")) +
+  geom_line(data = q_water_3, aes(x = time, y = q_w_dot, color = "Trial 3")) +
+  labs(title = "Minutes after Start vs. the Heat Removal Rate of Water",
+       x = "Time (min)", 
+       y = "Heat Removal (kJ)") +
+  theme_minimal()
 ```
 
 We do the same for the air inside the fridge. To find the $$\dot{Q_a}$$ , we use the specific heat value of dry air, 1005 J/kg, assuming that there is only dry air in the fridge. We use the same formula as above to determine $$\dot{Q}$$. To determine the mass of the air, we used the same thing as above: the volume of the fridge multiplies by the density of dry air, which ended up being 2.2 feet^3^, which is 0.062 m^3^. With the dry air density being 1.293 kg/m^3^ at standard state, the mass becomes 0.0801 kg.
 
 ```{r}
 #| label: finding-fridge-q-dot
-#q_frid1 <- trial1 |>
-#  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
-#  mutate(q_f_dot = q_f/(time * 60))
-#q_frid2 <- trial2 |>
-#  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
-#  mutate(q_f_dot = q_f/(time * 60))
-#q_frid3 <- trial3 |>
-#  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
-#  mutate(q_f_dot = q_f/(time * 60))
 q_frid1 <- trial1 |>
-  mutate(
-    dT_dt = (tfrid - lag(tfrid)) / ((time - lag(time)) * 60), # Degrees per second
-    q_w = abs(0.25 * 1.005 * dT_dt)  
-    )
+  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
+  mutate(q_f_dot = q_f/(time * 60))
 q_frid2 <- trial2 |>
-  mutate(
-    dT_dt = (tfrid - lag(tfrid)) / ((time - lag(time)) * 60), # Degrees per second
-    q_w = abs(0.25 * 1.005 * dT_dt)  
-    )
+  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
+  mutate(q_f_dot = q_f/(time * 60))
 q_frid3 <- trial3 |>
-  mutate(
-    dT_dt = (tfrid - lag(tfrid)) / ((time - lag(time)) * 60), # Degrees per second
-    q_w = abs(0.25 * 1.005 * dT_dt)  
-    )
+  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
+  mutate(q_f_dot = q_f/(time * 60))
+
 ```
 
 Plotted this out:
@@ -245,7 +221,7 @@ The total work is found through integrating the work rate (power) by time.
 #| label: find-work
 w1 <- trial1 |>
   mutate (w_dot = replace_na(w_dot, 0)) |>
-  mutate(w = w_dot * (time - lag(time)) * 60 * 0.001) |> #makes this in kW
+  mutate(w = w_dot * (time - lag(time)) * 60 * 0.001) |> #makes this in kJ
   select(time, w, w_dot)
 w2 <- trial2 |>
   mutate (w_dot = replace_na(w_dot, 0)) |>
@@ -281,17 +257,17 @@ combined_q_1 <- q_water_1 |>
   full_join(q_frid1, by="time") |>
   full_join(w1, by="time") |>
   mutate(trial = "Trial 1") |>
-  select(time, w_dot, w, q_f, q_w, q_f_dot, trial)
+  select(time, w_dot, w, q_f, q_w, trial)
 combined_q_2 <- q_water_2 |>
   full_join(q_frid2, by="time") |>
   full_join(w2, by="time") |>
   mutate(trial = "Trial 2") |>
-  select(time, w_dot, w, q_f, q_w, q_f_dot, trial)
+  select(time, w_dot, w, q_f, q_w, trial)
 combined_q_3 <- q_water_3 |>
   full_join(q_frid3, by="time") |>
   full_join(w3, by="time") |>
   mutate(trial = "Trial 3") |>
-  select(time, w_dot, w, q_f, q_w, q_f_dot, trial)
+  select(time, w_dot, w, q_f, q_w, trial)
 
 all <- bind_rows(combined_q_1, combined_q_2, combined_q_3)
 all[is.na(all)] <- 0
