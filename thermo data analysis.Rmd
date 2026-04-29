@@ -189,14 +189,14 @@ We do the same for the air inside the fridge. To find the $$\dot{Q_a}$$ , we use
 ```{r}
 #| label: finding-fridge-q-dot
 q_frid1 <- trial1 |>
-  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
-  mutate(q_f_dot = q_f/(time * 60))
+  mutate(q_f = abs(0.0801 * (tfrid - lag(tfrid)) * 1.005)) |>
+  mutate(q_f_dot = q_f/((time - lag(time)) * 60))
 q_frid2 <- trial2 |>
-  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
-  mutate(q_f_dot = q_f/(time * 60))
+  mutate(q_f = abs(0.0801 * (tfrid - lag(tfrid)) * 1.005))  |>
+  mutate(q_f_dot = q_f/((time - lag(time)) * 60))
 q_frid3 <- trial3 |>
-  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
-  mutate(q_f_dot = q_f/(time * 60))
+  mutate(q_f = abs(0.0801 * (tfrid - lag(tfrid)) * 1.005))  |>
+  mutate(q_f_dot = q_f/((time - lag(time)) * 60))
 
 ```
 
@@ -257,26 +257,26 @@ combined_q_1 <- q_water_1 |>
   full_join(q_frid1, by="time") |>
   full_join(w1, by="time") |>
   mutate(trial = "Trial 1") |>
-  select(time, w_dot, w, q_f, q_w, trial)
+  select(time, w_dot, w, q_f, q_f_dot, q_w_dot, q_w, trial)
 combined_q_2 <- q_water_2 |>
   full_join(q_frid2, by="time") |>
   full_join(w2, by="time") |>
   mutate(trial = "Trial 2") |>
-  select(time, w_dot, w, q_f, q_w, trial)
+  select(time, w_dot, w, q_f, q_f_dot, q_w_dot, q_w, trial)
 combined_q_3 <- q_water_3 |>
   full_join(q_frid3, by="time") |>
   full_join(w3, by="time") |>
   mutate(trial = "Trial 3") |>
-  select(time, w_dot, w, q_f, q_w, trial)
+  select(time, w_dot, w, q_f, q_f_dot, q_w_dot, q_w, trial)
 
 all <- bind_rows(combined_q_1, combined_q_2, combined_q_3)
 all[is.na(all)] <- 0
 ```
 
 ```{r}
-#all|>
-#  group_by(trial)|>
-#  summarize(q_total = sum(q_w_dot), q_lost_w = mean(q_w))
+all|>
+  group_by(trial)|>
+  summarize(q_total = sum(q_w_dot), q_lost_w = mean(q_w))
 ```
 
 Using the first law of thermodynamics:
