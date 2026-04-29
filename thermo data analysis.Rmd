@@ -146,17 +146,17 @@ $$m$$ = 0.25 kg. We use this to find the heat lost from the water due to refrige
 q_water_1 <- trial1 |>
   mutate(
     dT_dt = (tw - lag(tw)) / ((time - lag(time)) * 60), # Degrees per second
-    q_w = abs(0.25 * 4184 * dT_dt)  
+    q_w = abs(0.25 * 4.184 * dT_dt)  
     )
 q_water_2 <- trial2 |>
   mutate(
     dT_dt = (tw - lag(tw)) / ((time - lag(time)) * 60), # Degrees per second
-    q_w = abs(0.25 * 4184 * dT_dt)                     
+    q_w = abs(0.25 * 4.184 * dT_dt)                     
   )
 q_water_3 <- trial3 |>
   mutate(
     dT_dt = (tw - lag(tw)) / ((time - lag(time)) * 60), # Degrees per second
-    q_w = abs(0.25 * 4184 * dT_dt)                   
+    q_w = abs(0.25 * 4.184 * dT_dt)                   
   )
 #q_water_1 <- trial1 |>
  # mutate(q_w = 0.25 * (tw- lag(tw)) * 4.184) |>
@@ -198,15 +198,30 @@ We do the same for the air inside the fridge. To find the $$\dot{Q_a}$$ , we use
 
 ```{r}
 #| label: finding-fridge-q-dot
+#q_frid1 <- trial1 |>
+#  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
+#  mutate(q_f_dot = q_f/(time * 60))
+#q_frid2 <- trial2 |>
+#  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
+#  mutate(q_f_dot = q_f/(time * 60))
+#q_frid3 <- trial3 |>
+#  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
+#  mutate(q_f_dot = q_f/(time * 60))
 q_frid1 <- trial1 |>
-  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
-  mutate(q_f_dot = q_f/(time * 60))
+  mutate(
+    dT_dt = (tfrid - lag(tfrid)) / ((time - lag(time)) * 60), # Degrees per second
+    q_w = abs(0.25 * 1.005 * dT_dt)  
+    )
 q_frid2 <- trial2 |>
-  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
-  mutate(q_f_dot = q_f/(time * 60))
+  mutate(
+    dT_dt = (tfrid - lag(tfrid)) / ((time - lag(time)) * 60), # Degrees per second
+    q_w = abs(0.25 * 1.005 * dT_dt)  
+    )
 q_frid3 <- trial3 |>
-  mutate(q_f = 0.0801 * (tfrid - lag(tfrid)) * 1.005) |>
-  mutate(q_f_dot = q_f/(time * 60))
+  mutate(
+    dT_dt = (tfrid - lag(tfrid)) / ((time - lag(time)) * 60), # Degrees per second
+    q_w = abs(0.25 * 1.005 * dT_dt)  
+    )
 ```
 
 Plotted this out:
@@ -283,9 +298,9 @@ all[is.na(all)] <- 0
 ```
 
 ```{r}
-all|>
-  group_by(trial)|>
-  summarize(q_total = sum(q_w_dot), q_lost_w = mean(q_w))
+#all|>
+#  group_by(trial)|>
+#  summarize(q_total = sum(q_w_dot), q_lost_w = mean(q_w))
 ```
 
 Using the first law of thermodynamics:
