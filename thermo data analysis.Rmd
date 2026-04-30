@@ -184,7 +184,7 @@ ggplot() +
   theme_minimal()
 ```
 
-We do the same for the air inside the fridge. To find the $$\dot{Q_a}$$ , we use the specific heat value of dry air, 1005 J/kg, assuming that there is only dry air in the fridge. We use the same formula as above to determine $$\dot{Q}$$. To determine the mass of the air, we used the same thing as above: the volume of the fridge multiplies by the density of dry air, which ended up being 2.2 feet^3^, which is 0.062 m^3^. With the dry air density being 1.293 kg/m^3^ at standard state, the mass becomes 0.0801 kg.
+We do the same for the air inside the fridge. To find the $$\dot{Q_a}$$ , we use the specific heat value of dry air, 1005 J/kg, assuming that there is only dry air in the fridge. We use the same formula as above to determine $$\dot{Q}$$. To determine the mass of the air, we used the same thing as above: the volume of the fridge multiplied by the density of dry air, which ended up being 2.2 feet^3^, which is 0.062 m^3^. With the dry air density being 1.293 kg/m^3^ at standard state, the mass becomes 0.0801 kg. Something similar is done for the ambient air outside to make sure all the heat in the system is addressed.
 
 ```{r}
 #| label: finding-fridge-q-dot
@@ -197,7 +197,6 @@ q_frid2 <- trial2 |>
 q_frid3 <- trial3 |>
   mutate(q_f = abs(0.0801 * (tfrid - lag(tfrid)) * 1.005))  |>
   mutate(q_f_dot = q_f/((time - lag(time)) * 60))
-
 ```
 
 Plotted this out:
@@ -209,10 +208,11 @@ ggplot() +
   geom_line(data = q_frid1, aes(x = time, y = q_f, color = "Trial 1")) +
   geom_line(data = q_frid2, aes(x = time, y = q_f, color = "Trial 2")) +
   geom_line(data = q_frid3, aes(x = time, y = q_f, color = "Trial 3")) +
-  labs(title = "Minutes after Start vs. the Heat Removed from Air",
+  labs(title = "Minutes after Start vs. the Heat Removed from Air in Fridge",
        x = "Time (min)", 
        y = "Heat Removed (kJ)") +
   theme_minimal()
+
 ```
 
 The total work is found through integrating the work rate (power) by time.
@@ -255,7 +255,7 @@ Putting all the data together:
 #| label: add-q-together
 combined_q_1 <- q_water_1 |>
   full_join(q_frid1, by="time") |>
-  full_join(w1, by="time") |>
+  full_join(w1, by="time") |> 
   mutate(trial = "Trial 1") |>
   select(time, w_dot, w, q_f, q_f_dot, q_w_dot, q_w, trial)
 combined_q_2 <- q_water_2 |>

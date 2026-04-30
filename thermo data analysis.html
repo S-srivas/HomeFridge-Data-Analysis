@@ -152,7 +152,7 @@ window.Quarto = {
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>After importing these libraries, the team imported the data. The data is broken into two key chunks: the baseline data (<em>thermo_baseline.csv</em>) and the data collected over hours (<em>filename.csv).</em></p>
+<p>After importing these libraries, the team imported the data. The data is broken into two key chunks: the baseline data (<em>thermo_baseline.csv</em>) and the data collected over hours (<em>trial1.csv, trial2.csv, trial3.csv).</em></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>baseline <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"thermo_baseline.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>baseline <span class="ot">&lt;-</span> baseline <span class="sc">|&gt;</span></span>
@@ -160,7 +160,7 @@ window.Quarto = {
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">time =</span> <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span>)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>trial1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"trial1.csv"</span>, <span class="at">col_types =</span> <span class="fu">cols_only</span>(</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(), </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">W =</span> <span class="fu">col_double</span>(),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">W</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>()), </span>
@@ -169,65 +169,59 @@ window.Quarto = {
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">time =</span> <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span>,</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">tfrid =</span> <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span>,</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">tw =</span> <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span>,</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">ta =</span> <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
-e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>trial2 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"trial2.csv"</span>, <span class="at">col_types =</span> <span class="fu">cols_only</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(), </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">W =</span> <span class="fu">col_double</span>(),</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>()), </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">name_repair =</span> <span class="st">"unique_quiet"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">time =</span> <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span>,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">tfrid =</span> <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">tw =</span> <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span>,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">ta =</span> <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
-e.g.:
-  dat &lt;- vroom(...)
-  problems(dat)</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>trial3 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"trial3.csv"</span>, <span class="at">col_types =</span> <span class="fu">cols_only</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(), </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">W =</span> <span class="fu">col_double</span>(),</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>()), </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">name_repair =</span> <span class="st">"unique_quiet"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">time =</span> <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span>,</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">tfrid =</span> <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span>,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">tw =</span> <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">ta =</span> <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>baseline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">ta =</span> <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">w_dot =</span> <span class="st">`</span><span class="at">W</span><span class="st">`</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>trial2 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"trial2.csv"</span>, <span class="at">col_types =</span> <span class="fu">cols_only</span>(</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(), </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">W =</span> <span class="fu">col_double</span>(),</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>()), </span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">name_repair =</span> <span class="st">"unique_quiet"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">time =</span> <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span>,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>         <span class="at">tfrid =</span> <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span>,</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>         <span class="at">tw =</span> <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span>,</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>         <span class="at">ta =</span> <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span>,</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">w_dot =</span> W)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>trial3 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"trial3.csv"</span>, <span class="at">col_types =</span> <span class="fu">cols_only</span>(</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(), </span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">W =</span> <span class="fu">col_double</span>(),</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>(),</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">col_double</span>()), </span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">name_repair =</span> <span class="st">"unique_quiet"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">time =</span> <span class="st">`</span><span class="at">Minutes after start</span><span class="st">`</span>,</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>         <span class="at">tfrid =</span> <span class="st">`</span><span class="at">temp in fridge</span><span class="st">`</span>,</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>         <span class="at">tw =</span> <span class="st">`</span><span class="at">temp in water</span><span class="st">`</span>,</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">ta =</span> <span class="st">`</span><span class="at">temp in air</span><span class="st">`</span>,</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>         <span class="at">w_dot =</span> W)</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>trial1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 16 × 5
-    time volts   kwh    hz     W
+<pre><code># A tibble: 19 × 5
+    time w_dot tfrid    tw    ta
    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1     0  121.  0     59.9   0  
- 2     5  121.  0     60     0  
- 3    10  121.  0     59.9   0  
- 4    15  121   0     60     0  
- 5    20  121   0     60     0  
- 6    25  121.  0     60     0  
- 7    30  121.  0     60     0  
- 8    35  121.  0     59.9   0  
- 9    40  121.  0     60     0  
-10    45  121.  0     60    53.3
-11    50  121   0     59.9  51.2
-12    55  121.  0     59.9  46.7
-13    60  121.  0     60    46  
-14    70  121.  0.01  60    44.1
-15    80  121   0.02  60    43  
-16    90  122.  0.02  60     0  </code></pre>
+ 1     0  NA   11.3   19.8  20  
+ 2     5  NA    9.55  18.3  19.9
+ 3    10  NA    9.6   17.3  19.8
+ 4    15  59    9.65  16.8  19.9
+ 5    20  48    9.45  15.7  20  
+ 6    25  NA    8.96  15.3  19.9
+ 7    30  NA    9.11  14.7  20  
+ 8    35  NA    9.4   14.2  19.8
+ 9    40  NA    9.11  13.7  20.1
+10    45  NA    9.26  13.3  19.8
+11    50  59.4  9.11  13.0  19.8
+12    55  47.5  8.96  12.3  20.0
+13    60  NA    8.67  11.9  20.0
+14    65  NA    9.01  11.5  20  
+15    70  NA    8.86  11.6  20.1
+16    75  NA    8.82  11.4  19.6
+17    80  58.7  8.77  10.9  19.7
+18    85  47.6  8.62  10.8  20.0
+19    90  NA    8.62  10.5  NA  </code></pre>
 </div>
 </div>
 </section>
@@ -235,9 +229,9 @@ e.g.:
 <h2 class="anchored" data-anchor-id="cleaning-process">Cleaning Process</h2>
 <p>The team then cleaned out the dataset so it only reflected the moments where the compressor in the fridge was using power, rather than the total data collection time, as many values for work rate (power) are 0.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>baseline_filt <span class="ot">&lt;-</span> baseline <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">W</span><span class="st">`</span> <span class="sc">!=</span> <span class="dv">0</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>baseline_filt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>baseline_filt <span class="ot">&lt;-</span> baseline <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">W</span><span class="st">`</span> <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>baseline_filt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 5
    time volts   kwh    hz     W
@@ -255,13 +249,13 @@ e.g.:
 <h2 class="anchored" data-anchor-id="plotting-baseline-data">Plotting Baseline Data</h2>
 <p>Next, the team made two plots: minutes after start vs.&nbsp;W (work) and minutes after start vs.&nbsp;volts. <strong>Figure 1</strong> is the first plot.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(baseline_filt, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> W)) <span class="sc">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Power from the Wall Unit Over 90 Minutes"</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"The power the compressor takes in in 5 minute bursts over time"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x_label =</span> <span class="st">"Time (min)"</span>, </span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y_lab =</span> <span class="st">"Power (Watts)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(baseline_filt, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> W)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Power from the Wall Unit Over 90 Minutes"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"The power the compressor takes in in 5 minute bursts over time"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x_label =</span> <span class="st">"Time (min)"</span>, </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y_lab =</span> <span class="st">"Power (Watts)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -273,16 +267,15 @@ e.g.:
 </section>
 <section id="using-water-dish" class="level2">
 <h2 class="anchored" data-anchor-id="using-water-dish">Using Water Dish</h2>
-<p>After a clear idea, the team placed a dish of water with the mass of <em>mass</em> to see the rate of heat transfer from water to the fridge. This variable will be called <span class="math display">\[\dot{Q_w}\]</span></p>
-<p>.Plotting this:</p>
+<p>After a clear idea, the team plotted the temperature of the air outside the fridge, water, and the air inside the fridge.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trial1, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">time</span><span class="st">`</span>)) <span class="sc">+</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="st">`</span><span class="at">tfrid</span><span class="st">`</span>)) <span class="sc">+</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="st">`</span><span class="at">tw</span><span class="st">`</span>)) <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="st">`</span><span class="at">ta</span><span class="st">`</span>)) <span class="sc">+</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Temperature"</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time (min)"</span>, </span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Temperature (Celsius)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trial1, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">time</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># geom_line(aes(y = `tfrid`)) +</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="st">`</span><span class="at">tw</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_line(aes(y = `ta`)) +</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Temperature of the water"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time (min)"</span>, </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Temperature (Celsius)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -301,54 +294,35 @@ e.g.:
 m = V \times\rho_w
 \]</span></p>
 <p>Which in this case yields</p>
-<p><span class="math display">\[m\]</span> = 0.00025 kg or 0.25 grams. We use this to find the heat lost from the water due to refrigeration, which will then be divided by the time taken, to find the heat removal rate. Below is the heat removal rate and the heat removed.</p>
+<p><span class="math display">\[m\]</span> = 0.25 kg. We use this to find the heat lost from the water due to refrigeration, which will then be divided by the time taken, to find the heat removal rate. Below is the heat removal rate and the heat removed.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>q_water_1 <span class="ot">&lt;-</span> trial1 <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_w =</span> <span class="fl">0.00025</span> <span class="sc">*</span> (tw<span class="sc">-</span> <span class="fu">lag</span>(tw)) <span class="sc">*</span> <span class="dv">4184</span>) <span class="sc">|&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_dot_w =</span> q_w<span class="sc">/</span>time)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>q_water_2 <span class="ot">&lt;-</span> trial2 <span class="sc">|&gt;</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_w =</span> <span class="fl">0.00025</span> <span class="sc">*</span> (tw<span class="sc">-</span> <span class="fu">lag</span>(tw)) <span class="sc">*</span> <span class="dv">4184</span>) <span class="sc">|&gt;</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_dot_w =</span> q_w<span class="sc">/</span>time)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>q_water_3 <span class="ot">&lt;-</span> trial3 <span class="sc">|&gt;</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_w =</span> <span class="fl">0.00025</span> <span class="sc">*</span> (tw<span class="sc">-</span> <span class="fu">lag</span>(tw)) <span class="sc">*</span> <span class="dv">4184</span>) <span class="sc">|&gt;</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_dot_w =</span> q_w<span class="sc">/</span>time)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>q_water_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 19 × 7
-    time     W tfrid    tw    ta    q_w  q_dot_w
-   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
- 1     0    NA 11.3   19.8  20   NA     NA      
- 2     5    NA  9.55  18.3  19.9 -1.50  -0.299  
- 3    10    NA  9.6   17.3  19.8 -1.07  -0.107  
- 4    15    NA  9.65  16.8  19.9 -0.565 -0.0377 
- 5    20    NA  9.45  15.7  20   -1.08  -0.0539 
- 6    25    NA  8.96  15.3  19.9 -0.408 -0.0163 
- 7    30    NA  9.11  14.7  20   -0.659 -0.0220 
- 8    35    NA  9.4   14.2  19.8 -0.513 -0.0146 
- 9    40    NA  9.11  13.7  20.1 -0.513 -0.0128 
-10    45    NA  9.26  13.3  19.8 -0.460 -0.0102 
-11    50    NA  9.11  13.0  19.8 -0.251 -0.00502
-12    55    NA  8.96  12.3  20.0 -0.774 -0.0141 
-13    60    NA  8.67  11.9  20.0 -0.408 -0.00680
-14    65    NA  9.01  11.5  20   -0.460 -0.00708
-15    70    NA  8.86  11.6  20.1  0.105  0.00149
-16    75    NA  8.82  11.4  19.6 -0.157 -0.00209
-17    80    NA  8.77  10.9  19.7 -0.554 -0.00693
-18    85    NA  8.62  10.8  20.0 -0.157 -0.00185
-19    90    NA  8.62  10.5  NA   -0.262 -0.00291</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>q_water_1 <span class="ot">&lt;-</span> trial1 <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">q_w =</span> <span class="fu">abs</span>(<span class="fl">0.25</span> <span class="sc">*</span> <span class="fl">4.184</span> <span class="sc">*</span> (tw <span class="sc">-</span> <span class="fu">lag</span>(tw))),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">q_w_dot =</span> q_w<span class="sc">/</span>((time <span class="sc">-</span> <span class="fu">lag</span>(time)) <span class="sc">*</span> <span class="dv">60</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>q_water_2 <span class="ot">&lt;-</span> trial2 <span class="sc">|&gt;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">q_w =</span> <span class="fu">abs</span>(<span class="fl">0.25</span> <span class="sc">*</span> <span class="fl">4.184</span> <span class="sc">*</span> (tw <span class="sc">-</span> <span class="fu">lag</span>(tw))),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">q_w_dot =</span> q_w<span class="sc">/</span>((time <span class="sc">-</span> <span class="fu">lag</span>(time)) <span class="sc">*</span> <span class="dv">60</span>)                 </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>q_water_3 <span class="ot">&lt;-</span> trial3 <span class="sc">|&gt;</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">q_w =</span> <span class="fu">abs</span>(<span class="fl">0.25</span> <span class="sc">*</span> <span class="fl">4.184</span> <span class="sc">*</span> (tw <span class="sc">-</span> <span class="fu">lag</span>(tw))),</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">q_w_dot =</span> q_w<span class="sc">/</span>((time <span class="sc">-</span> <span class="fu">lag</span>(time)) <span class="sc">*</span> <span class="dv">60</span>)                 </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>When this is graphed out:<br>
 </p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> q_water_1, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_dot_w, <span class="at">color =</span> <span class="st">"Trial 1"</span>)) <span class="sc">+</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> q_water_2, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_dot_w, <span class="at">color =</span> <span class="st">"Trial 2"</span>)) <span class="sc">+</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> q_water_3, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_dot_w, <span class="at">color =</span> <span class="st">"Trial 3"</span>)) <span class="sc">+</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Heat Removal rate of Water"</span>,</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time (min)"</span>, </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Heat Removal Rate (J/kg)"</span>) <span class="sc">+</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> q_water_1, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_w, <span class="at">color =</span> <span class="st">"Trial 1"</span>)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> q_water_2, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_w, <span class="at">color =</span> <span class="st">"Trial 2"</span>)) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> q_water_3, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_w, <span class="at">color =</span> <span class="st">"Trial 3"</span>)) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Heat Removed From Water"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time (min)"</span>, </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Heat Removal (kJ)"</span>) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -356,57 +330,182 @@ m = V \times\rho_w
 </figure>
 </div>
 </div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> q_water_1, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_w_dot, <span class="at">color =</span> <span class="st">"Trial 1"</span>)) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> q_water_2, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_w_dot, <span class="at">color =</span> <span class="st">"Trial 2"</span>)) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> q_water_3, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_w_dot, <span class="at">color =</span> <span class="st">"Trial 3"</span>)) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Heat Removal Rate of Water"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time (min)"</span>, </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Heat Removal (kJ)"</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="thermo-data-analysis_files/figure-html/graphed-q-dot-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<p>Doing something similar for the fridge temperature, we find the <span class="math display">\[\dot{Q}\]</span> into the air using the specific heat value of dry air, assuming that there is only dry air in the fridge. We use the same formula as above, and the same mass flow rate, due to conservation of mass and mass flow rate.</p>
+</div>
+</div>
+<p>We do the same for the air inside the fridge. To find the <span class="math display">\[\dot{Q_a}\]</span> , we use the specific heat value of dry air, 1005 J/kg, assuming that there is only dry air in the fridge. We use the same formula as above to determine <span class="math display">\[\dot{Q}\]</span>. To determine the mass of the air, we used the same thing as above: the volume of the fridge multiplied by the density of dry air, which ended up being 2.2 feet<sup>3</sup>, which is 0.062 m<sup>3</sup>. With the dry air density being 1.293 kg/m<sup>3</sup> at standard state, the mass becomes 0.0801 kg. Something similar is done for the ambient air outside to make sure all the heat in the system is addressed.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>q_dot_frid1 <span class="ot">&lt;-</span> trial1 <span class="sc">|&gt;</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_f =</span> <span class="fl">0.00025</span> <span class="sc">*</span> (tfrid <span class="sc">-</span> <span class="fu">lag</span>(tfrid)) <span class="sc">*</span> <span class="dv">1005</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_dot_f =</span> q_f<span class="sc">/</span>time)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>q_dot_frid2 <span class="ot">&lt;-</span> trial2 <span class="sc">|&gt;</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_f =</span> <span class="fl">0.00025</span> <span class="sc">*</span> (tfrid <span class="sc">-</span> <span class="fu">lag</span>(tfrid)) <span class="sc">*</span> <span class="dv">1005</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_dot_f =</span> q_f<span class="sc">/</span>time)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>q_dot_frid3 <span class="ot">&lt;-</span> trial3 <span class="sc">|&gt;</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_f =</span> <span class="fl">0.00025</span> <span class="sc">*</span> (tfrid <span class="sc">-</span> <span class="fu">lag</span>(tfrid)) <span class="sc">*</span> <span class="dv">1005</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_dot_f =</span> q_f<span class="sc">/</span>time)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>q_dot_frid1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 19 × 7
-    time     W tfrid    tw    ta     q_f   q_dot_f
-   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
- 1     0    NA 11.3   19.8  20   NA      NA       
- 2     5    NA  9.55  18.3  19.9 -0.450  -0.0899  
- 3    10    NA  9.6   17.3  19.8  0.0126  0.00126 
- 4    15    NA  9.65  16.8  19.9  0.0126  0.000838
- 5    20    NA  9.45  15.7  20   -0.0503 -0.00251 
- 6    25    NA  8.96  15.3  19.9 -0.123  -0.00492 
- 7    30    NA  9.11  14.7  20    0.0377  0.00126 
- 8    35    NA  9.4   14.2  19.8  0.0729  0.00208 
- 9    40    NA  9.11  13.7  20.1 -0.0729 -0.00182 
-10    45    NA  9.26  13.3  19.8  0.0377  0.000838
-11    50    NA  9.11  13.0  19.8 -0.0377 -0.000754
-12    55    NA  8.96  12.3  20.0 -0.0377 -0.000685
-13    60    NA  8.67  11.9  20.0 -0.0729 -0.00121 
-14    65    NA  9.01  11.5  20    0.0854  0.00131 
-15    70    NA  8.86  11.6  20.1 -0.0377 -0.000538
-16    75    NA  8.82  11.4  19.6 -0.0100 -0.000134
-17    80    NA  8.77  10.9  19.7 -0.0126 -0.000157
-18    85    NA  8.62  10.8  20.0 -0.0377 -0.000443
-19    90    NA  8.62  10.5  NA    0       0       </code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>q_frid1 <span class="ot">&lt;-</span> trial1 <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_f =</span> <span class="fu">abs</span>(<span class="fl">0.0801</span> <span class="sc">*</span> (tfrid <span class="sc">-</span> <span class="fu">lag</span>(tfrid)) <span class="sc">*</span> <span class="fl">1.005</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_f_dot =</span> q_f<span class="sc">/</span>((time <span class="sc">-</span> <span class="fu">lag</span>(time)) <span class="sc">*</span> <span class="dv">60</span>))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>q_frid2 <span class="ot">&lt;-</span> trial2 <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_f =</span> <span class="fu">abs</span>(<span class="fl">0.0801</span> <span class="sc">*</span> (tfrid <span class="sc">-</span> <span class="fu">lag</span>(tfrid)) <span class="sc">*</span> <span class="fl">1.005</span>))  <span class="sc">|&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_f_dot =</span> q_f<span class="sc">/</span>((time <span class="sc">-</span> <span class="fu">lag</span>(time)) <span class="sc">*</span> <span class="dv">60</span>))</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>q_frid3 <span class="ot">&lt;-</span> trial3 <span class="sc">|&gt;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_f =</span> <span class="fu">abs</span>(<span class="fl">0.0801</span> <span class="sc">*</span> (tfrid <span class="sc">-</span> <span class="fu">lag</span>(tfrid)) <span class="sc">*</span> <span class="fl">1.005</span>))  <span class="sc">|&gt;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">q_f_dot =</span> q_f<span class="sc">/</span>((time <span class="sc">-</span> <span class="fu">lag</span>(time)) <span class="sc">*</span> <span class="dv">60</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plotted this out:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(q_dot_frid1, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_dot_f)) <span class="sc">+</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Heat Removal rate of Water"</span>,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time (min)"</span>, </span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Heat Removal Rate (J/kg)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> q_frid1, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_f, <span class="at">color =</span> <span class="st">"Trial 1"</span>)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> q_frid2, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_f, <span class="at">color =</span> <span class="st">"Trial 2"</span>)) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> q_frid3, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> q_f, <span class="at">color =</span> <span class="st">"Trial 3"</span>)) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Heat Removed from Air in Fridge"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time (min)"</span>, </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Heat Removed (kJ)"</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="thermo-data-analysis_files/figure-html/graphed-frid-q-dot-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
+</div>
+</div>
+<p>The total work is found through integrating the work rate (power) by time.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>w1 <span class="ot">&lt;-</span> trial1 <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span> (<span class="at">w_dot =</span> <span class="fu">replace_na</span>(w_dot, <span class="dv">0</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">w =</span> w_dot <span class="sc">*</span> (time <span class="sc">-</span> <span class="fu">lag</span>(time)) <span class="sc">*</span> <span class="dv">60</span> <span class="sc">*</span> <span class="fl">0.001</span>) <span class="sc">|&gt;</span> <span class="co">#makes this in kJ</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time, w, w_dot)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>w2 <span class="ot">&lt;-</span> trial2 <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span> (<span class="at">w_dot =</span> <span class="fu">replace_na</span>(w_dot, <span class="dv">0</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">w =</span> w_dot <span class="sc">*</span> (time <span class="sc">-</span> <span class="fu">lag</span>(time)) <span class="sc">*</span> <span class="dv">60</span> <span class="sc">*</span> <span class="fl">0.001</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span> (time, w, w_dot)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>w3 <span class="ot">&lt;-</span> trial3 <span class="sc">|&gt;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span> (<span class="at">w_dot =</span> <span class="fu">replace_na</span>(w_dot, <span class="dv">0</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">w =</span> w_dot <span class="sc">*</span> (time <span class="sc">-</span> <span class="fu">lag</span>(time)) <span class="sc">*</span> <span class="dv">60</span> <span class="sc">*</span> <span class="fl">0.001</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span> (time, w, w_dot)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>w1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 19 × 3
+    time     w w_dot
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1     0  NA     0  
+ 2     5   0     0  
+ 3    10   0     0  
+ 4    15  17.7  59  
+ 5    20  14.4  48  
+ 6    25   0     0  
+ 7    30   0     0  
+ 8    35   0     0  
+ 9    40   0     0  
+10    45   0     0  
+11    50  17.8  59.4
+12    55  14.2  47.5
+13    60   0     0  
+14    65   0     0  
+15    70   0     0  
+16    75   0     0  
+17    80  17.6  58.7
+18    85  14.3  47.6
+19    90   0     0  </code></pre>
+</div>
+</div>
+<p>Plot work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> w1, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> w, <span class="at">color =</span> <span class="st">"Trial 1"</span>)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> w2, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> w, <span class="at">color =</span> <span class="st">"Trial 2"</span>)) <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> w3, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> w, <span class="at">color =</span> <span class="st">"Trial 3"</span>)) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minutes after Start vs. the Electric Work done"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time (min)"</span>, </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Work (kJ)"</span>) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="thermo-data-analysis_files/figure-html/graphed-work-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Putting all the data together:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>combined_q_1 <span class="ot">&lt;-</span> q_water_1 <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(q_frid1, <span class="at">by=</span><span class="st">"time"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(w1, <span class="at">by=</span><span class="st">"time"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">trial =</span> <span class="st">"Trial 1"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time, w_dot, w, q_f, q_f_dot, q_w_dot, q_w, trial)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>combined_q_2 <span class="ot">&lt;-</span> q_water_2 <span class="sc">|&gt;</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(q_frid2, <span class="at">by=</span><span class="st">"time"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(w2, <span class="at">by=</span><span class="st">"time"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">trial =</span> <span class="st">"Trial 2"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time, w_dot, w, q_f, q_f_dot, q_w_dot, q_w, trial)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>combined_q_3 <span class="ot">&lt;-</span> q_water_3 <span class="sc">|&gt;</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(q_frid3, <span class="at">by=</span><span class="st">"time"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(w3, <span class="at">by=</span><span class="st">"time"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">trial =</span> <span class="st">"Trial 3"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time, w_dot, w, q_f, q_f_dot, q_w_dot, q_w, trial)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>all <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(combined_q_1, combined_q_2, combined_q_3)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>all[<span class="fu">is.na</span>(all)] <span class="ot">&lt;-</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>all<span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(trial)<span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">q_total =</span> <span class="fu">sum</span>(q_w_dot), <span class="at">q_lost_w =</span> <span class="fu">mean</span>(q_w))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  trial   q_total q_lost_w
+  &lt;chr&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 Trial 1  0.0329    0.520
+2 Trial 2  0.0303    0.479
+3 Trial 3  0.0292    0.461</code></pre>
+</div>
+</div>
+<p>Using the first law of thermodynamics:</p>
+<p><span class="math display">\[
+Q - W~=~m\times\Delta{h}
+\]</span></p>
+<p>where <span class="math display">\[{m}\]</span> is 0 due to mass conservation, in an ideal scenario, the <span class="math display">\[Q\]</span> equals the <span class="math display">\[W\]</span>. Thus, we combine <span class="math display">\[{Q_w}\]</span> with <span class="math display">\[Q_a\]</span> to find <span class="math display">\[Q_t\]</span>, which is the total heat removed from the system due to the fridge. We do the same for the work to determine the total work and total heat per trial</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>total_q <span class="ot">&lt;-</span> all <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(trial) <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">q_f_total =</span> <span class="fu">sum</span>(q_f, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">q_w_total =</span> <span class="fu">sum</span>(q_w, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">qt =</span> <span class="fu">sum</span>(q_f, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">sum</span>(q_w, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">wt =</span> <span class="fu">sum</span>(w, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>total_q</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  trial   q_f_total q_w_total    qt    wt
+  &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 Trial 1     0.385      9.88 10.3   96.1
+2 Trial 2     0.624      9.10  9.72  81.3
+3 Trial 3     0.374      8.76  9.13  78.7</code></pre>
+</div>
+</div>
+<p>After finding <span class="math display">\[Q_t\]</span>, we find the coefficient of performance (COP) using the formula:<br>
+</p>
+<p><span class="math display">\[
+COP~=~Q_{total}/W_{cycle}
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>total_q <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">cop =</span> <span class="fu">abs</span>(qt)<span class="sc">/</span>wt, <span class="at">avg_cop =</span> <span class="fu">mean</span>(cop))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+    cop avg_cop
+  &lt;dbl&gt;   &lt;dbl&gt;
+1 0.107   0.114
+2 0.120   0.114
+3 0.116   0.114</code></pre>
 </div>
 </div>
 </section>
